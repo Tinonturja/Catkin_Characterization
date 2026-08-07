@@ -43,7 +43,7 @@ class Data:
         if self.kinetic_df is None:
             raise ValueError("Data not loaded. Pleae call load_data() before processing")
         # Take the kinetics data
-        self.kinetic_df = self.kinetic_df[['Time', 'Concentration_Capacity']]
+        self.kinetic_df = self.kinetic_df.rename(columns={'Time': 'Time', 'qt( catkin)': 'Concentration_Capacity'})
         self.time = self.kinetic_df['Time']
         self.adsorption_amount = self.kinetic_df['Concentration_Capacity']
         # get the mean and the standard deviation of this data
@@ -61,3 +61,14 @@ class Data:
 
     def get_tensors(self):
         return self.time_normalized, self.qt_normalized, self.allocated_time_normalized
+
+kinetics_data_sheetname = 'catkin (pfo pso)'
+isotherm_data_sheetname = 'catkin'
+data_path = './data of biofilm.xlsx'
+dataset = Data(data_path = data_path)
+dataset.load_data(kinetics_data_sheetname=kinetics_data_sheetname,isotherm_data_sheetname=isotherm_data_sheetname)
+dataset.preprocess_and_scale()
+print(dataset.time_tensors)
+#print(dataset.test_time)
+print(dataset.t_mean)
+print(dataset.time_normalized)
